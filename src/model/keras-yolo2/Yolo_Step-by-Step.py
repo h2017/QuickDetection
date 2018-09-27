@@ -70,7 +70,7 @@ OBJECT_SCALE     = 5.0
 COORD_SCALE      = 1.0
 CLASS_SCALE      = 1.0
 
-BATCH_SIZE       = 16
+BATCH_SIZE       = 10#16
 WARM_UP_BATCHES  = 0
 TRUE_BOX_BUFFER  = 50
 
@@ -529,7 +529,7 @@ checkpoint = ModelCheckpoint('weights_coco.h5',
 
 # In[ ]:
 
-logdir = '/home/thekb/Desktop/vineeth_insight/keras-yolo2/logs'
+logdir = '~/tf_logs'#'/home/thekb/Desktop/vineeth_insight/keras-yolo2/logs'
 #tb_counter  = len([log for log in os.listdir(os.path.expanduser('~/logs/')) if 'coco_' in log]) + 1
 tb_counter  = len([log for log in os.listdir(os.path.expanduser(logdir)) if 'coco_' in log]) + 1
 
@@ -546,7 +546,7 @@ model.compile(loss=custom_loss, optimizer=optimizer)
 
 model.fit_generator(generator        = train_batch, 
                     steps_per_epoch  = len(train_batch), 
-                    epochs           = 100, 
+                    epochs           = 10,#100 
                     verbose          = 1,
                     validation_data  = valid_batch,
                     validation_steps = len(valid_batch),
