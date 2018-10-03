@@ -2,20 +2,20 @@
     "model" : {
         "backend":              "Full Yolo",
         "input_size":           416,
-        "anchors":              [0.57273, 0.677385, 1.87446, 2.06253, 3.33843, 5.47434, 7.88282, 3.52778, 9.77052, 9.16828],
+        "anchors":              [3.20, 4.37, 5.82, 6.07, 7.40, 10.48, 10.87,7.27, 11.85, 12.14],
         "max_box_per_image":    10,        
-        "labels":               ["kangaroo"]
+        "labels":               ["cardboard", "glass", "metal", "plastic"]
     },
 
     "train": {
-        "train_image_folder":   "/home/andy/data/kangaroo/images/",
-        "train_annot_folder":   "/home/andy/data/kangaroo/annots/",     
+        "train_image_folder":   "../../../../data/processed/train/",
+        "train_annot_folder":   "../../../../data/processed/trainann/",     
           
         "train_times":          8,
-        "pretrained_weights":   "full_yolo_kangaroo3.h5",
-        "batch_size":           16,
+        "pretrained_weights":   "full_yolo_trash.h5",
+        "batch_size":           10,
         "learning_rate":        1e-4,
-        "nb_epochs":            1,
+        "nb_epochs":            25,
         "warmup_epochs":        3,
 
         "object_scale":         5.0 ,
@@ -23,13 +23,13 @@
         "coord_scale":          1.0,
         "class_scale":          1.0,
 
-        "saved_weights_name":   "full_yolo_kangaroo.h5",
+        "saved_weights_name":   "full_yolo_trash.h5",
         "debug":                true
     },
 
     "valid": {
-        "valid_image_folder":   "",
-        "valid_annot_folder":   "",
+        "valid_image_folder":   "../../../../data/processed/val/",
+        "valid_annot_folder":   "../../../../data/processed/valann/",
 
         "valid_times":          1
     }
