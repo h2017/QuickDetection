@@ -13,6 +13,7 @@ from preprocessing import BatchGenerator
 from keras.callbacks import EarlyStopping, ModelCheckpoint, TensorBoard
 from backend import TinyYoloFeature, FullYoloFeature, MobileNetFeature, SqueezeNetFeature, Inception3Feature, VGG16Feature, ResNet50Feature
 
+
 class YOLO(object):
     def __init__(self, backend,
                        input_size, 
@@ -451,11 +452,18 @@ class YOLO(object):
             # compute recall and precision
             recall    = true_positives / num_annotations
             precision = true_positives / np.maximum(true_positives + false_positives, np.finfo(np.float64).eps)
-
+            
             # compute average precision
             average_precision  = compute_ap(recall, precision)  
             average_precisions[label] = average_precision
+            
+            # compute label's precision and recall
+            recall_label = np.cumsum(true_positives) / num_annotations
+            precision_label = np.cumsum(true_positives) / np.maximum(true_positives + false_positives, np.finfo(np.float64).eps)
 
+            print('precision_for_label'+ str(label) +' = ' + str(precision_label))
+            print('recall_for_label'+ str(label) +' = ' + str(recall_label))
+            
         return average_precisions    
 
     def predict(self, image):
