@@ -215,7 +215,17 @@ class YOLO(object):
         
         loss_xy    = tf.reduce_sum(tf.square(true_box_xy-pred_box_xy)     * coord_mask) / (nb_coord_box + 1e-6) / 2.
         loss_wh    = tf.reduce_sum(tf.square(true_box_wh-pred_box_wh)     * coord_mask) / (nb_coord_box + 1e-6) / 2.
-        loss_conf  = tf.reduce_sum(tf.square(true_box_conf-pred_box_conf) * conf_mask)  / (nb_conf_box  + 1e-6) / 2.
+        
+    	#-----added for testing another loss function
+        conf_mask_neg = tf.to_float(best_ious < 0.6) * (1 - y_true[..., 4]) * self.no_object_scale
+        conf_mask_pos = y_true[..., 4] * self.object_scale
+        nb_conf_box_neg = tf.reduce_sum(tf.to_float(conf_mask_neg > 0.0))
+        nb_conf_box_pos = tf.reduce_sum(tf.to_float(conf_mask_pos > 0.0))
+        loss_conf_neg = tf.reduce_sum(tf.square(true_box_conf-pred_box_conf) * conf_mask_neg) / (nb_conf_box_neg + 1e-6) / 2.
+        loss_conf_pos = tf.reduce_sum(tf.square(true_box_conf-pred_box_conf) * conf_mask_pos) / (nb_conf_box_pos + 1e-6) / 2.
+        loss_conf = loss_conf_neg + loss_conf_pos
+        #-------
+	#loss_conf  = tf.reduce_sum(tf.square(true_box_conf-pred_box_conf) * conf_mask)  / (nb_conf_box  + 1e-6) / 2.
         loss_class = tf.nn.sparse_softmax_cross_entropy_with_logits(labels=true_box_class, logits=pred_box_class)
         loss_class = tf.reduce_sum(loss_class * class_mask) / (nb_class_box + 1e-6)
         
@@ -242,6 +252,7 @@ class YOLO(object):
 
     def load_weights(self, weight_path):
         self.model.load_weights(weight_path)
+        #self.model.layers[1].load_weights(weight_path) #use this for training
 
     def train(self, train_imgs,     # the list of images to train the model
                     valid_imgs,     # the list of images used to validate the model
@@ -368,6 +379,7 @@ class YOLO(object):
         # gather all detections and annotations
         all_detections     = [[None for i in range(generator.num_classes())] for j in range(generator.size())]
         all_annotations    = [[None for i in range(generator.num_classes())] for j in range(generator.size())]
+        
 
         for i in range(generator.size()):
             raw_image = generator.load_image(i)
@@ -444,6 +456,13 @@ class YOLO(object):
             indices         = np.argsort(-scores)
             false_positives = false_positives[indices]
             true_positives  = true_positives[indices]
+            
+            # compute label's precision and recall
+            label_recall = np.sum(true_positives) / num_annotations
+            label_precision = np.sum(true_positives) / np.maximum(np.sum(true_positives + false_positives), np.finfo(np.float64).eps)
+
+            print('precision_for_label'+ str(label) +' = ' + str(label_precision))
+            print('recall_for_label'+ str(label) +' = ' + str(label_recall))
 
             # compute false positives and true positives
             false_positives = np.cumsum(false_positives)
@@ -456,13 +475,6 @@ class YOLO(object):
             # compute average precision
             average_precision  = compute_ap(recall, precision)  
             average_precisions[label] = average_precision
-            
-            # compute label's precision and recall
-            recall_label = np.cumsum(true_positives) / num_annotations
-            precision_label = np.cumsum(true_positives) / np.maximum(true_positives + false_positives, np.finfo(np.float64).eps)
-
-            print('precision_for_label'+ str(label) +' = ' + str(precision_label))
-            print('recall_for_label'+ str(label) +' = ' + str(recall_label))
             
         return average_precisions    
 
