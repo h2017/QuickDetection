@@ -5,8 +5,8 @@ This repository provides a custom object-detection model to sort recyclabes from
 The dataset was obtained from <https://github.com/patil215/scrapsort/tree/master/training_data/v2>. It has 2400 images of common recyclable materials belonging to 5 classes - Metal , Paper, Cardboard, Glass, Plastic. The images contained trash objects at different angles on a white background. I droped the Plastic class, as it was found to be problematic.  Images did not have bounding boxes and so I manually labelled approximately 170 images per class using [labelImg](https://github.com/tzutalin/labelImg). The annotated training data is available in data folder. 
 
 ## Model & Training
-I have used keras-yolo v2 model. I modified config file to include my own anchor boxes and labels. Also, I have modified the loss function from the original, to suit my dataset. To build the mode with, download  To train the model, make sure weights for the backend are downloaded and then run 
- to the current directory
+I have used keras-yolo v2 model. I modified config file to include my own anchor boxes and labels. Also, I have modified the loss function from the original, to suit my dataset. Before training the model, download [these weights](<https://code.et.stanford.edu/newmans/CS230/blob/b8c3aa0a181767adb495465f7e367e99b341778f/keras-yolo2/full_yolo_backend.h5>) to build the backbone. To train, do:
+
 ``` 
 cd keras-yolo2
 python train.py -c config.json
