@@ -16,7 +16,8 @@ python train.py -c config.json
 ## Results
 - Mean Average Precision = 0.84
 - Confusion Matrix :
- ![Confusion Matrix](ConfusionMatrix.png)
+
+ <img src="https://github.com/h2017/QuickDetection/blob/dev-data_pipeline-Sep_17_2018/ConfusionMatrix.png" width="400">
 
 
 ## Run Inference
