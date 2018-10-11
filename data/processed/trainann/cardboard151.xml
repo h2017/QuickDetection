@@ -1,0 +1,26 @@
+<annotation>
+	<folder>cardboard</folder>
+	<filename>cardboard151.jpg</filename>
+	<path>/home/thekb/Desktop/vineeth_insight/QuickDetection/data/raw/cardboard/cardboard151.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>512</width>
+		<height>384</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>cardboard</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>136</xmin>
+			<ymin>118</ymin>
+			<xmax>293</xmax>
+			<ymax>281</ymax>
+		</bndbox>
+	</object>
+</annotation>

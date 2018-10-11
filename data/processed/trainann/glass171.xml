@@ -1,0 +1,26 @@
+<annotation>
+	<folder>glass</folder>
+	<filename>glass171.jpg</filename>
+	<path>/home/thekb/Desktop/vineeth_insight/QuickDetection/data/raw/glass/glass171.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>512</width>
+		<height>384</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>glass</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>100</xmin>
+			<ymin>94</ymin>
+			<xmax>372</xmax>
+			<ymax>278</ymax>
+		</bndbox>
+	</object>
+</annotation>
