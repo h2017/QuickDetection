@@ -10,14 +10,13 @@ I have used keras-yolo v2 model. I modified config file to include my own anchor
 ``` 
 cd keras-yolo2
 python train.py -c config.json
-
 ```
 
 ## Results
 - Mean Average Precision = 0.84
 - Confusion Matrix :
-
- <img src="https://github.com/h2017/QuickDetection/blob/dev-data_pipeline-Sep_17_2018/ConfusionMatrix.png" width="400">
+<p align="center">
+ <img src="https://github.com/h2017/QuickDetection/blob/dev-data_pipeline-Sep_17_2018/ConfusionMatrix.png" width="400"> </p>
 
 
 ## Run Inference
@@ -25,7 +24,9 @@ Run the predict.py file in keras-yolo2 folder with a directory of images as its 
 ```
 cd keras-yolo2
 python predict.py -c config.json -w full_yolo_trash.h5 -i ~/data/processed/test/
-
 ```
-- Inference time (on Tesla K80) = 0.061 +/- 0.09  (s)
+- Inference time (on Nvidia Tesla K80) = 0.061 +/- 0.09  (s)
 - A sample test image: 
+<p align="center">
+ <img src="https://github.com/h2017/QuickDetection/blob/dev-data_pipeline-Sep_17_2018/SampleInferenceOutput.png"> </p>
+
