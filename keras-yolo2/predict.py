@@ -4,11 +4,10 @@ import argparse
 import os
 import cv2
 import numpy as np
-from tqdm import tqdm
-from preprocessing import parse_annotation
 from utils import draw_boxes
 from frontend import YOLO
 import json
+import time
 
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"]="0"
@@ -29,20 +28,20 @@ argparser.add_argument(
 argparser.add_argument(
     '-i',
     '--input',
-    help='path to an image or an video (mp4 format)')
+    help='path to directory containing test images')
 
 def _main_(args):
     config_path  = args.conf
     weights_path = args.weights
     image_path   = args.input
-
+    
     with open(config_path) as config_buffer:    
         config = json.load(config_buffer)
 
     ###############################
     #   Make the model 
     ###############################
-
+    model_load_time = time.time()
     yolo = YOLO(backend             = config['model']['backend'],
                 input_size          = config['model']['input_size'], 
                 labels              = config['model']['labels'], 
@@ -55,41 +54,23 @@ def _main_(args):
 
     yolo.load_weights(weights_path)
 
+    print('Model load time is '+ str(time.time() - model_load_time))
+    
     ###############################
     #   Predict bounding boxes 
     ###############################
-
-    if image_path[-4:] == '.mp4':
-        video_out = image_path[:-4] + '_detected' + image_path[-4:]
-        video_reader = cv2.VideoCapture(image_path)
-
-        nb_frames = int(video_reader.get(cv2.CAP_PROP_FRAME_COUNT))
-        frame_h = int(video_reader.get(cv2.CAP_PROP_FRAME_HEIGHT))
-        frame_w = int(video_reader.get(cv2.CAP_PROP_FRAME_WIDTH))
-
-        video_writer = cv2.VideoWriter(video_out,
-                               cv2.VideoWriter_fourcc(*'MPEG'), 
-                               50.0, 
-                               (frame_w, frame_h))
-
-        for i in tqdm(range(nb_frames)):
-            _, image = video_reader.read()
-            
-            boxes = yolo.predict(image)
-            image = draw_boxes(image, boxes, config['model']['labels'])
-
-            video_writer.write(np.uint8(image))
-
-        video_reader.release()
-        video_writer.release()  
-    else:
-        image = cv2.imread(image_path)
+    
+    inference_time = []
+    for filename in os.listdir(image_path):
+        img_path = os.path.join(image_path, filename)
+        inference_start_time = time.time()
+        image = cv2.imread(img_path)
         boxes = yolo.predict(image)
-        image = draw_boxes(image, boxes, config['model']['labels'])
-
+        inference_time.append(time.time() - inference_start_time)
         print(len(boxes), 'boxes are found')
-
-        cv2.imwrite(image_path[:-4] + '_detected' + image_path[-4:], image)
+        image = draw_boxes(image, boxes, config['model']['labels'])
+        cv2.imwrite(img_path[:-4] + '_detected' + img_path[-4:], image)
+    print('Avg inference time is '+ str(np.mean(inference_time)) + '+/-' + str(np.std(inference_time)))
 
 if __name__ == '__main__':
     args = argparser.parse_args()
