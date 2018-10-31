@@ -30,3 +30,20 @@ python predict.py -c config.json -w full_yolo_trash.h5 -i ~/data/processed/test/
 <p align="center">
  <img src="https://github.com/h2017/QuickDetection/blob/dev-data_pipeline-Sep_17_2018/SampleInferenceOutput.png"> </p>
 
+## Transform keras model for serving
+For model serving, it is better to reduce model loading time and computation time. I achieved that using [tensorflow graph transformation tool] (https://github.com/tensorflow/tensorflow/tree/master/tensorflow/tools/graph_transforms#optimizing-for-deployment). The output of the tool is a frozen graph. 
+
+To obtained a frozen graph, do:
+```
+cd keras-yolo2
+python keras_to_tensorflow.py -c config.json -w full_yolo_trash.h5
+```
+Often, you only know the name of the output layer and not the exact node name in that output layer. Then, you can visually find it in the network using tensorboard. For this, do:
+```
+cd keras-yolo2
+python keras_to_tensorflow.py -c config.json -w full_yolo_trash.h5 -v True
+```
+An events file will be generated in the /tmp/. Then run the following command in terminal and follow its output to visualize
+```
+tensorboard --logdir=/tmp/
+```
