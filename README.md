@@ -1,106 +1,32 @@
-# Insight_Project_Framework
-Framework for machine learning projects at Insight Data Science. 
+# Train a Wall-E
+This repository provides a custom object-detection model to sort recyclabes from trash. This [Google Slides](https://docs.google.com/presentation/d/1zeNFiWiGkVjS7e59hS5mzyFpvdS8Ayi5G3jqLYzYhPY/edit?usp=sharing) provides a briew overview of the project.
+ 
+## Dataset
+The dataset was obtained from <https://github.com/patil215/scrapsort/tree/master/training_data/v2>. It has 2400 images of common recyclable materials belonging to 5 classes - Metal , Paper, Cardboard, Glass, Plastic. The images contained trash objects at different angles and on a white background. I dropped the Paper class, as it was found to be problematic.  Images did not have bounding boxes and so I manually labelled approximately 170 images per class using [labelImg](https://github.com/tzutalin/labelImg). The annotated training data is available in data folder. 
 
-## Motivation for this project format:
-- **src** : Put all source code for production within structured directory
-- **tests** : Put all source code for testing in an easy to find location
-- **configs** : Enable modification of all preset variables within single directory (consisting of one or many config files for separate tasks)
-- **data** : Include example a small amount of data in the Github repository so tests can be run to validate installation
-- **build** : Include scripts that automate building of a standalone environment
-- **static** : Any images or content to include in the README or web framework if part of the pipeline
+## Model & Training
+I have used keras-yolo v2 model. I modified config file to include my own anchor boxes and labels. Also, I have modified the loss function from the original, to suit my dataset. Before training the model, download [these weights](<https://code.et.stanford.edu/newmans/CS230/blob/b8c3aa0a181767adb495465f7e367e99b341778f/keras-yolo2/full_yolo_backend.h5>) to build the backbone. To train, do:
 
-## Setup
-Clone repository and update python path
-```
-repo_name=Insight_Project_Framework # URL of your new repository
-username=mrubash1 # Username for your personal github account
-git clone https://github.com/$username/$repo_name
-cd $repo_name
-echo "export $repo_name=${PWD}" >> ~/.bash_profile
-echo "export PYTHONPATH=$repo_name/src:${PYTHONPATH}" >> ~/.bash_profile
-source ~/.bash_profile
-```
-Create new development branch and switch onto it
-```
-branch_name=dev-readme_requisites-20180905 # Name of development branch, of the form 'dev-feature_name-date_of_creation'}}
-git checkout -b $branch_name
-git push origin $branch_name
+``` 
+cd keras-yolo2
+python train.py -c config.json
 ```
 
-## Requisites
-- List all packages and software needed to build the environment
-- This could include cloud command line tools (i.e. gsutil), package managers (i.e. conda), etc.
-```
-# Example
-- A
-- B
-- C
-```
+## Results
+- Mean Average Precision = 0.84
+- Confusion Matrix :
+<p align="center">
+ <img src="https://github.com/h2017/QuickDetection/blob/dev-data_pipeline-Sep_17_2018/ConfusionMatrix.png" width="400"> </p>
 
-## Build Environment
-- Include instructions of how to launch scripts in the build subfolder
-- Build scripts can include shell scripts or python setup.py files
-- The purpose of these scripts is to build a standalone environment, for running the code in this repository
-- The environment can be for local use, or for use in a cloud environment
-- If using for a cloud environment, commands could include CLI tools from a cloud provider (i.e. gsutil from Google Cloud Platform)
-```
-# Example
-
-# Step 1
-# Step 2
-```
-
-## Configs
-- We recommond using either .yaml or .txt for your config files, not .json
-- **DO NOT STORE CREDENTIALS IN THE CONFIG DIRECTORY!!**
-- If credentials are needed, use environment variables or HashiCorp's [Vault](https://www.vaultproject.io/)
-
-
-## Test
-- Include instructions for how to run all tests after the software is installed
-```
-# Example
-
-# Step 1
-# Step 2
-```
 
 ## Run Inference
-- Include instructions on how to run inference
-- i.e. image classification on a single image for a CNN deep learning project
+Run the predict.py file in keras-yolo2 folder with a directory of images as its input. The output of the inference i.e. predicted bounding boxes, will be overlaid on top of the images and saved in the same directory.
 ```
-# Example
+cd keras-yolo2
+python predict.py -c config.json -w full_yolo_trash.h5 -i ~/data/processed/test/
+```
+- Inference time (on Nvidia Tesla K80) = 0.061 +/- 0.09  (s)
+- A sample test image: 
+<p align="center">
+ <img src="https://github.com/h2017/QuickDetection/blob/dev-data_pipeline-Sep_17_2018/SampleInferenceOutput.png"> </p>
 
-# Step 1
-# Step 2
-```
-
-## Build Model
-- Include instructions of how to build the model
-- This can be done either locally or on the cloud
-```
-# Example
-
-# Step 1
-# Step 2
-```
-
-## Serve Model
-- Include instructions of how to set up a REST or RPC endpoint 
-- This is for running remote inference via a custom model
-```
-# Example
-
-# Step 1
-# Step 2
-```
-
-## Analysis
-- Include some form of EDA (exploratory data analysis)
-- And/or include benchmarking of the model and results
-```
-# Example
-
-# Step 1
-# Step 2
-```

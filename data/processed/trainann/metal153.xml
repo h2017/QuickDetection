@@ -1,0 +1,26 @@
+<annotation>
+	<folder>metal</folder>
+	<filename>metal153.jpg</filename>
+	<path>/home/thekb/Desktop/vineeth_insight/QuickDetection/data/raw/metal/metal153.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>512</width>
+		<height>384</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>metal</name>
+		<pose>Unspecified</pose>
+		<truncated>1</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>50</xmin>
+			<ymin>83</ymin>
+			<xmax>512</xmax>
+			<ymax>368</ymax>
+		</bndbox>
+	</object>
+</annotation>

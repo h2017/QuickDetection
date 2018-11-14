@@ -1,0 +1,5 @@
+Sources:
+
+Original Trashnet Dataset  ->  https://github.com/garythung/trashnet
+
+Trashnet Dataset V2  -> https://github.com/patil215/scrapsort 
